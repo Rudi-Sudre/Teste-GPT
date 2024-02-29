@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jogo de Palavras</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f7f7f7;
+      text-align: center;
+      margin: 20px;
+    }
+
+    h1 {
+      color: #2196F3; /* Azul */
+    }
+
+    h2 {
+      color: #FFA500; /* Laranja */
+    }
+
+    textarea {
+      width: 80%;
+      max-width: 400px;
+      padding: 10px;
+      margin-top: 10px;
+      font-size: 16px;
+      max-height: 150px;
+      resize: vertical;
+    }
+
+    button {
+      background-color: #FF0000; /* Vermelho */
+      color: white;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      border: none;
+      border-radius: 5px;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background-color: #CC0000; /* Tom mais escuro de vermelho */
+    }
+
+    #palavraBox {
+      margin-top: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .letraBox {
+      border: 2px solid #333;
+      border-radius: 5px;
+      width: 60px;
+      height: 60px;
+      margin: 10px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      font-size: 16px;
+      background-color: black;
+      color: orange;
+      font-weight: bold;
+    }
+
+    .info {
+      margin-top: 5px;
+      font-size: 12px;
+      color: #777;
+    }
+
+    #rodape {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background-color: #f7f7f7;
+      padding: 10px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Jogo de Palavras</h1>
+<h2>Escreva seu texto e aperte o botão</h2>
+
+<textarea id="inputTexto" rows="5" cols="50"></textarea>
+<div id="palavraBox"></div>
+<button onclick="verificarPalavras()">Sorte do Dia!</button>
+
+<div id="rodape">
+  <p>&copy; 2024 Jogo de Palavras</p>
+</div>
+
+<script>
+  // Lista de palavras a serem usadas no jogo
+  const palavras = [
+    "Computador", "Inteligência Artificial", "Software", "Algoritmo", "Web", "Framework",
+    "Interface", "Backend", "Frontend", "API", "Mobile", "Segurança", "Rede", "Nuvem",
+    "Banco de Dados", "Machine Learning", "Git", "Estrutura de Dados", "Desenvolvimento",
+    "JavaScript", "HTML", "CSS", "OpenAI", "Inovação", "Tecnologia", "Sistema Operacional",
+    "Realidade Virtual", "Big Data"
+  ];
+  let palavraAtualIndex = 0;
+
+  function verificarPalavras() {
+    // Obtém o texto inserido pelo jogador
+    const textoInserido = document.getElementById('inputTexto').value;
+
+    // Verifica as localizações de cada letra para a palavra atual
+    const localizacoes = verificarPalavra(textoInserido, palavras[palavraAtualIndex]);
+    
+    // Exibe a palavra atual em uma caixa
+    exibirPalavraBox(localizacoes);
+    
+    // Atualiza a palavra atual para a próxima
+    palavraAtualIndex = (palavraAtualIndex + 1) % palavras.length;
+  }
+
+  function verificarPalavra(texto, palavraCorreta) {
+    const localizacoes = [];
+
+    // Verifica as localizações de cada letra
+    for (let i = 0; i < palavraCorreta.length; i++) {
+      const letra = palavraCorreta[i];
+      let index = -1;
+
+      // Procura a letra no texto (ignorando espaços e sem diferenciar maiúsculas e minúsculas)
+      while ((index = texto.replace(/\s/g, '').toLowerCase().indexOf(letra.toLowerCase(), index + 1)) !== -1) {
+        // Ignora espaços em branco na letrabox
+        if (letra !== ' ' || (letra === ' ' && /\S/.test(texto.substring(0, index)))) {
+          // Adiciona a localização
+          const linha = texto.substring(0, index).split('\n').length;
+          localizacoes.push(`L${linha}:${index + 1}`);
+          break; // Somente a primeira ocorrência
+        }
+      }
+
+      // Se a letra não estiver no texto, adiciona "null" ao array de localizações
+      if (index === -1) {
+        localizacoes.push("null");
+      }
+    }
+
+    // Retorna as localizações
+    return localizacoes;
+  }
+
+  function exibirPalavraBox(localizacoes) {
+    const palavraCorreta = palavras[palavraAtualIndex];
+    const palavraBox = document.getElementById('palavraBox');
+    
+    // Limpa o conteúdo anterior
+    palavraBox.innerHTML = '';
+
+    // Exibe cada letra em uma caixa
+    for (let i = 0; i < palavraCorreta.length; i++) {
+      const letra = palavraCorreta[i];
+      
+      // Ignora espaços em branco
+      if (letra !== ' ') {
+        const letraBox = document.createElement('div');
+        letraBox.className = 'letraBox';
+        letraBox.textContent = letra;
+
+        // Adiciona a informação da localização
+        const info = document.createElement('div');
+        info.className = 'info';
+        info.textContent = localizacoes[i];
+        letraBox.appendChild(info);
+
+        palavraBox.appendChild(letraBox);
+      }
+    }
+  }
+</script>
+
+</body>
+</html>
