@@ -6,32 +6,41 @@
   <title>Jogo de Palavras</title>
   <style>
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f7f7f7;
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      background-color: #171717; /* Cor de fundo escura */
+      color: #ffffff; /* Cor do texto */
       text-align: center;
       margin: 20px;
     }
 
     h1 {
-      color: #2196F3; /* Azul */
+      color: #FF9800; /* Laranja */
+      border: 2px solid #FF9800; /* Borda laranja */
+      border-radius: 10px; /* Borda arredondada */
+      padding: 10px; /* Preenchimento interno */
+      display: inline-block; /* Permite ajustar a largura ao conteúdo */
     }
 
     h2 {
-      color: #FFA500; /* Laranja */
+      color: #FF5722; /* Vermelho-escuro */
     }
 
     textarea {
-      width: 80%;
-      max-width: 400px;
+      width: 90%; /* Largura aumentada para acomodar 50 caracteres por linha */
+      max-width: 600px; /* Largura máxima para manter a legibilidade */
       padding: 10px;
       margin-top: 10px;
       font-size: 16px;
       max-height: 150px;
-      resize: vertical;
+      resize: none; /* Desativa a capacidade de redimensionar */
+      white-space: pre-wrap; /* Quebra de linha preservando espaços em branco */
+      overflow-y: auto; /* Adiciona barra de rolagem vertical quando necessário */
+      background-color: #000000; /* Cor de fundo preta */
+      color: #ffffff; /* Cor do texto branco */
     }
 
     button {
-      background-color: #FF0000; /* Vermelho */
+      background-color: #E91E63; /* Rosa */
       color: white;
       padding: 10px 20px;
       font-size: 16px;
@@ -42,7 +51,7 @@
     }
 
     button:hover {
-      background-color: #CC0000; /* Tom mais escuro de vermelho */
+      background-color: #D81B60; /* Tom mais escuro de rosa */
     }
 
     #palavraBox {
@@ -56,7 +65,7 @@
     .letraBox {
       border: 2px solid #333;
       border-radius: 5px;
-      width: 60px;
+      width: 30px; /* Largura aumentada para caber 50 caracteres na mesma linha */
       height: 60px;
       margin: 10px;
       display: flex;
@@ -64,9 +73,10 @@
       justify-content: center;
       align-items: center;
       font-size: 16px;
-      background-color: black;
-      color: orange;
+      background-color: #673AB7; /* Roxo */
+      color: #FFC107; /* Amarelo-escuro */
       font-weight: bold;
+      white-space: nowrap; /* Evita quebra de linha dentro da letraBox */
     }
 
     .info {
@@ -79,7 +89,7 @@
       position: fixed;
       bottom: 0;
       width: 100%;
-      background-color: #f7f7f7;
+      background-color: #171717; /* Cor de fundo escura */
       padding: 10px;
       text-align: center;
     }
@@ -90,7 +100,7 @@
 <h1>Jogo de Palavras</h1>
 <h2>Escreva seu texto e aperte o botão</h2>
 
-<textarea id="inputTexto" rows="5" cols="50"></textarea>
+<textarea id="inputTexto" rows="5" oninput="formatarInput()"></textarea>
 <div id="palavraBox"></div>
 <button onclick="verificarPalavras()">Sorte do Dia!</button>
 
@@ -105,7 +115,11 @@
     "Interface", "Backend", "Frontend", "API", "Mobile", "Segurança", "Rede", "Nuvem",
     "Banco de Dados", "Machine Learning", "Git", "Estrutura de Dados", "Desenvolvimento",
     "JavaScript", "HTML", "CSS", "OpenAI", "Inovação", "Tecnologia", "Sistema Operacional",
-    "Realidade Virtual", "Big Data"
+    "Realidade Virtual", "Big Data", "Cloud Computing", "Python", "Programação", "Arquitetura",
+    "Segurança da Informação", "Cibersegurança", "IoT", "Inteligência de Negócios", "Automatização",
+    "Realidade Aumentada", "Redes Sociais", "Plataforma", "Prototipagem", "Usabilidade",
+    "Desenvolvimento Ágil", "Ferramentas", "Interação Humano-Computador", "Data Science", "Analytics",
+    "Mobile First", "UX/UI Design", "E-commerce", "Responsive Design", "Scrum", "Kanban"
   ];
   let palavraAtualIndex = 0;
 
@@ -137,7 +151,8 @@
         if (letra !== ' ' || (letra === ' ' && /\S/.test(texto.substring(0, index)))) {
           // Adiciona a localização
           const linha = texto.substring(0, index).split('\n').length;
-          localizacoes.push(`L${linha}:${index + 1}`);
+          const coluna = index - texto.substring(0, index).lastIndexOf('\n');
+          localizacoes.push(`${linha}:${coluna}`);
           break; // Somente a primeira ocorrência
         }
       }
@@ -177,6 +192,18 @@
 
         palavraBox.appendChild(letraBox);
       }
+    }
+  }
+
+  function formatarInput() {
+    const inputTexto = document.getElementById('inputTexto');
+    const linhas = inputTexto.value.split('\n');
+    const ultimaLinha = linhas[linhas.length - 1];
+    const ultimaLinhaLength = ultimaLinha.length;
+
+    if (ultimaLinhaLength > 50) {
+      const novaLinha = ultimaLinha.substring(50);
+      inputTexto.value = inputTexto.value + '\n' + novaLinha;
     }
   }
 </script>
